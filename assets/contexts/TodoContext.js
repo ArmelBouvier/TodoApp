@@ -1,3 +1,5 @@
+import { RepeatOneSharp } from '@material-ui/icons';
+import axios from 'axios';
 import React, { createContext } from 'react';
 
 export const TodoContext = createContext();
@@ -7,13 +9,9 @@ class TodoContextProvider extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            todos: [
-                {id: 1, name: 'do something'},
-                {id: 2, name: 'do  something else'},
-                {id: 3, name: 'do another thing'},
-                {id: 4, name: 'do otherwise'},
-            ],
+            todos: [],
         };
+        this.readTodo();
     }
 
     //create
@@ -28,7 +26,14 @@ class TodoContextProvider extends React.Component {
 
     //read
     readTodo() {
-        
+        axios.get('api/todo/read')
+        .then(response => {
+            this.setState({
+                todos: response.data,
+            })
+        }).catch(error => {
+            console.error(error);
+        })
     }
 
     //update
