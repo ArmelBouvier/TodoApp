@@ -85,7 +85,7 @@ class TodoController extends AbstractController
      * @param Todo $todo
      * @return JsonResponse
      */
-    public function delete( Todo $todo)
+    public function delete(Todo $todo)
     {
         try {
             $this->entityManager->remove($todo);
@@ -93,5 +93,8 @@ class TodoController extends AbstractController
         } catch (Exception $exception) {
             //error
         }
+        return $this->json([
+            'message' => 'todo has been deleted',
+        ]);
     }
 }
