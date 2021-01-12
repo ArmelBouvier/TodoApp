@@ -26,20 +26,7 @@ class TodoController extends AbstractController
     }
 
     /**
-     * @Route("/read", name="api_todo_read")
-     */
-    public function index()
-    {
-        $todos = $this->todoRepository->findAll();
-        $arrayOfTodos = [];
-        foreach ($todos as $todo) {
-            $arrayOfTodos[] = $todo->toArray();
-        }
-        return $this->json($arrayOfTodos);
-    }
-
-    /**
-     * @Route("/create", name="api_todo_create")
+     * @Route("/create", name="api_todo_create", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
@@ -54,6 +41,55 @@ class TodoController extends AbstractController
             return $this->json([
                 'todo' => $todo->toArray(),
             ]);
+        } catch (Exception $exception) {
+            //error
+        }
+    }
+
+    /**
+     * @Route("/read", name="api_todo_read", methods={"GET"})
+     */
+    public function read()
+    {
+        $todos = $this->todoRepository->findAll();
+        $arrayOfTodos = [];
+        foreach ($todos as $todo) {
+            $arrayOfTodos[] = $todo->toArray();
+        }
+        return $this->json($arrayOfTodos);
+    }
+
+    /**
+     * @Route("/update/{id}", name="api_todo_update/", methods={"PUT"})
+     * @param Request $request
+     * @param Todo $todo
+     * @return JsonResponse
+     */
+    public function update(Request $request, Todo $todo)
+    {
+       $content = json_decode($request->getContent());
+       $todo->setName($content->name) ;
+       try {
+           $this->entityManager->flush();
+       } catch (Exception $exception) {
+           //error;
+       }
+
+       return $this->json([
+           'message' => 'todo has been updated',
+       ]);
+    }
+
+    /**
+     * @Route("/delete/{id}", name="api_todo_delete", methods={"DELETE"})
+     * @param Todo $todo
+     * @return JsonResponse
+     */
+    public function delete( Todo $todo)
+    {
+        try {
+            $this->entityManager->remove($todo);
+            $this->entityManager->flush();
         } catch (Exception $exception) {
             //error
         }
