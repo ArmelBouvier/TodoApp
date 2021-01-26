@@ -1,26 +1,28 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import PropTypes from 'prop-types';
-import React, { useContext } from 'react';
-import { TodoContext } from '../contexts/TodoContext';
+import React, {useContext} from 'react';
+import {TodoContext} from '../contexts/TodoContext';
 
 function DeleteDialog(props) {
+    const context = useContext(TodoContext);
 
     const hide = () => {
-        props.setDeletConfirmationIsShown(false);
+        props.setDeleteConfirmationIsShown(false);
     };
 
-    const context = useContext(TodoContext);
     return (
         <Dialog onClose={hide} fullWidth={true} maxWidth='sm' open={props.open}>
-            <DialogTitle>Are you sure you wish to delete this task ?</DialogTitle>
+            <DialogTitle>Are you sure you wish to delete this to-do?</DialogTitle>
             <DialogContent>
                 {props.todo.name}
             </DialogContent>
             <DialogActions>
-                <Button onClick={hide}>
-                    Cancel
-                </Button>
-                <Button  onClick={() => {
+                <Button onClick={hide}>Cancel</Button>
+                <Button onClick={() => {
                     context.deleteTodo({id: props.todo.id, name: props.todo.name});
                     hide();
                 }}>
@@ -33,11 +35,10 @@ function DeleteDialog(props) {
 
 DeleteDialog.propTypes = {
     open: PropTypes.bool.isRequired,
-    setDeletConfirmationIsShown: PropTypes.func.isRequired,
+    setDeleteConfirmationIsShown: PropTypes.func.isRequired,
     todo: PropTypes.shape({
-        id: PropTypes.number,
-        name: PropTypes.string,
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
     }),
-}
-
+};
 export default DeleteDialog;
